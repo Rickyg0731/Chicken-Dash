@@ -141,6 +141,12 @@ public class player_script : MonoBehaviour
         if (Input.GetKeyDown("r"))
         {
             SceneManager.LoadScene(0);
+            Time.timeScale = 1;
+        }
+
+        if (Input.GetKeyDown("q"))
+        {
+            Application.Quit();
         }
 
     }
