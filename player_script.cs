@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.SceneManagement;
 
 public class player_script : MonoBehaviour
 {
@@ -20,22 +23,48 @@ public class player_script : MonoBehaviour
 
     public float game_speed = 25;
 
+    public float score = 0;
+    public int best_score;
+    int score_int;
+    public TextMeshProUGUI score_text;
+    public TextMeshProUGUI best_text;
+
     float speed_timer = 5;
     bool stop_game = false;
+
+
 
     public void die()
     {
         player_animator.SetInteger("state", 1);
         game_speed = 0;
         stop_game = true;
+        if(score_int > best_score)
+        {
+            PlayerPrefs.SetInt("best", score_int);
+        }
     }
-   
+
+    private void Start()
+    {
+        best_score = PlayerPrefs.GetInt("best");
+    }
+
+
     void Update()
     {
+        if(stop_game == false)
+        {
+            score = score + Time.deltaTime;
+            score_int = (int)score;
+            score_text.text = score_int.ToString();
+
+        }
+
         speed_timer = speed_timer - Time.deltaTime;
         if (speed_timer <= 0 && stop_game == false)
         {
-            game_speed = game_speed + 5;
+            game_speed = game_speed + 4;
             speed_timer = 5;
         }
 
@@ -87,6 +116,11 @@ public class player_script : MonoBehaviour
                 Time.timeScale = 1;
             }
             
+        }
+
+        if (Input.GetKeyDown("r"))
+        {
+            SceneManager.LoadScene(0);
         }
 
     }
