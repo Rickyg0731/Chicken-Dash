@@ -21,13 +21,22 @@ public class player_script : MonoBehaviour
     public Animator player_animator;
     public GameObject paused_menu_ui;
 
+    public AudioSource pause_sound;
+    public AudioSource loose_sound;
+    public AudioSource impact_sound;
+    public AudioSource camera_sound;
+    public GameObject background_music;
+
     public float game_speed = 25;
 
     public float score = 0;
-    public int best_score;
+    public int best_score = 0;
     int score_int;
     public TextMeshProUGUI score_text;
     public TextMeshProUGUI best_text;
+
+    public string turn_left;
+    public string turn_Right;
 
     float speed_timer = 5;
     bool stop_game = false;
@@ -36,13 +45,17 @@ public class player_script : MonoBehaviour
 
     public void die()
     {
+        background_music.SetActive(false);
         player_animator.SetInteger("state", 1);
         game_speed = 0;
         stop_game = true;
+        loose_sound.Play();
+        impact_sound.Play();
         if(score_int > best_score)
         {
             PlayerPrefs.SetInt("best", score_int);
         }
+
     }
 
     private void Start()
@@ -55,6 +68,7 @@ public class player_script : MonoBehaviour
     {
         if(stop_game == false)
         {
+            best_text.text = best_score.ToString();
             score = score + Time.deltaTime;
             score_int = (int)score;
             score_text.text = score_int.ToString();
@@ -69,7 +83,8 @@ public class player_script : MonoBehaviour
         }
 
         //move left
-        if (Input.GetKey("a") && player_rig.position.x > -1.584 && stop_game == false)
+        if (Input.GetKey("a") && player_rig.position.x > -1.584 && stop_game == false ||
+            Input.GetAxis(turn_left) < -0.2f && player_rig.position.x > -1.584 && stop_game == false)
         {
             Vector3 player_pos = player_rig.position;
             player_pos.x = player_pos.x - move_amount * Time.deltaTime;
@@ -77,7 +92,8 @@ public class player_script : MonoBehaviour
             player_go.transform.SetPositionAndRotation(ROTATE_LEFT_LOCATION.transform.position,ROTATE_LEFT_LOCATION.transform.rotation);
         }
         //move Right
-        else if (Input.GetKey("d") && player_rig.position.x < 1.7 && stop_game == false)
+        else if (Input.GetKey("d") && player_rig.position.x < 1.7 && stop_game == false ||
+                 Input.GetAxis(turn_Right) > 0.2f && player_rig.position.x < 1.7 && stop_game == false)
         {
             Vector3 player_pos = player_rig.position;
             player_pos.x = player_pos.x + move_amount * Time.deltaTime;
@@ -91,7 +107,8 @@ public class player_script : MonoBehaviour
 
         if (Input.GetKeyDown("v"))
         {
-            if(camera_1.activeInHierarchy == true)
+            camera_sound.Play();
+            if (camera_1.activeInHierarchy == true)
             {
                 camera_1.SetActive(false);
                 camera_2.SetActive(true);
@@ -105,13 +122,16 @@ public class player_script : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(paused_menu_ui.activeInHierarchy == false)
+            pause_sound.Play();
+            if (paused_menu_ui.activeInHierarchy == false)
             {
+                background_music.SetActive(false);
                 paused_menu_ui.SetActive(true);
                 Time.timeScale = 0;
             }
             else
             {
+                background_music.SetActive(true);
                 paused_menu_ui.SetActive(false);
                 Time.timeScale = 1;
             }

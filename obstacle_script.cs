@@ -7,7 +7,7 @@ public class obstacle_script : MonoBehaviour
     public GameObject train_1;
     public GameObject train_2;
     public GameObject train_3;
-
+    public GameObject bomb;
 
     void Start()
     {
@@ -32,10 +32,17 @@ public class obstacle_script : MonoBehaviour
         }
         else
         {
-            train_1.SetActive(false);
+            train_1.SetActive(true);
             train_2.SetActive(false);
             train_3.SetActive(false);
         }
+
+        int bomb_ran = Random.Range(0, 20);
+        if(bomb_ran == 10)
+        {
+            bomb.SetActive(true);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
