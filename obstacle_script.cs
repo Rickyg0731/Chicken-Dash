@@ -32,15 +32,17 @@ public class obstacle_script : MonoBehaviour
         }
         else
         {
-          //  train_1.SetActive(false);
-            //train_2.SetActive(false);
-           // train_3.SetActive(false);
+            train_1.SetActive(false);
+            train_2.SetActive(false);
+            train_3.SetActive(false);
         }
     }
 
-
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if(other.gameObject.layer == 7)
+        {
+            other.gameObject.GetComponent<player_script>().die();
+        }
     }
 }

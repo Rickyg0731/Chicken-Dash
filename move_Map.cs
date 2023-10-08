@@ -7,6 +7,7 @@ public class move_Map : MonoBehaviour
 
     public Rigidbody this_rig;
     public float speed = 2;
+    public player_script script_player;
 
     void Start()
     {
@@ -15,6 +16,7 @@ public class move_Map : MonoBehaviour
 
     void Update()
     {
+        speed = script_player.game_speed;
         //move the map
         Vector3 new_position = this_rig.position;
         new_position.z = new_position.z - speed * Time.deltaTime;
